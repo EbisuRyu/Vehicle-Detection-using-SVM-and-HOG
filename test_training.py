@@ -75,4 +75,4 @@ for resized, scale in pyramid(image, scale=1.5):
             time.sleep(0.025)
             
 predict_bboxs = non_maximum_supperssion(predict_bboxs, 0.15)
-visualize_bbox(image, predict_bboxs
+visualize_bbox(image, predict_bboxs)
