@@ -5,23 +5,33 @@ import cv2
 import matplotlib.pyplot as plt
 
 def pyramid(image, scale=1.5, minSize=(30, 30)):
-
-    current_scale = 1.0
-    yield image, current_scale
-    while True:
-        current_scale *= scale
-        w = int(image.shape[1] / scale)
-        image = imutils.resize(image, width=w)
-        if image.shape[0] < minSize[1] or image.shape[1] < minSize[0]:
-            break
-        yield image, current_scale
+    if scale == 1.0:
+        yield image, scale
   
-def sliding_window(image, stepSize, windowSize):
-	# slide a window across the image
-	for y in range(0, image.shape[0], stepSize):
-		for x in range(0, image.shape[1], stepSize):
-			# yield the current window
-			yield (x, y, image[y:y + windowSize[1], x:x + windowSize[0]])
+    else:
+        current_scale = 1.0
+        yield image, current_scale
+        while True:
+            current_scale *= scale
+            w = int(image.shape[1] / scale)
+            image = imutils.resize(image, width=w)
+            if image.shape[0] < minSize[1] or image.shape[1] < minSize[0]:
+                break
+            yield image, current_scale
+  
+def sliding_window(image, stepSize, windowSize, strip_position = None):
+    if strip_position:
+        y_start = strip_position[0]
+        y_end = min(max(strip_position[1], windowSize[0]), image.shape[0])
+        for y in range(y_start, y_end, stepSize):
+            for x in range(0, image.shape[1], stepSize):
+                yield (x, y, image[y:y + windowSize[1], x:x + windowSize[0]])
+    else:
+        # slide a window across the image
+        for y in range(0, image.shape[0], stepSize):
+            for x in range(0, image.shape[1], stepSize):
+                # yield the current window
+                yield (x, y, image[y:y + windowSize[1], x:x + windowSize[0]])
 
 def visualize_bbox(image, bboxes):
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
