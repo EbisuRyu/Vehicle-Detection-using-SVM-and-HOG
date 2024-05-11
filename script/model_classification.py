@@ -18,7 +18,7 @@ class SVMObjectClassifier():
         self.label_encoder = LabelEncoder()
         self.feature_extracter = None
     
-    def get_feature_extracter(self, feature_extracter):
+    def set_feature_extracter(self, feature_extracter):
         self.feature_extracter = feature_extracter
     
     def prepare_dataset(self, X, y):

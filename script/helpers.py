@@ -44,7 +44,7 @@ def show_images(images, per_row = 3, per_col = 2, W = 10, H = 5, tdpi = 80):
 
 def box_boundaries(box):
   x1, y1 = box[0], box[1]
-  x2, y2 = box[0] + box[2], box[1] + box[2]  
+  x2, y2 = box[2], box[3]  
   return x1, y1, x2, y2
 
 def put_boxes(image, bboxes):

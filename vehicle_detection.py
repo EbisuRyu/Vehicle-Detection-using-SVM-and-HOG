@@ -30,9 +30,12 @@ feature_extracter = FeatureExtracter(**sourcer_params)
 model = training_model(X, y, feature_extracter, './save_model', evaluate=False)
 
 image = cv2.imread(args["image"])
-windowSize = [(50, 50), (30, 30)]
+windowSize = [(80, 80)]
 feature_window_size = (64, 64)
-slider = Slider(model, windowSize, feature_window_size, stride=args['stride'], scale=args['scale'], visualize=args['visualize'])
-predict_bbox = slider.predict(image, threshold=args['thresh'])
+slider = Slider(model, non_maximum_supperssion, feature_window_size, stride=args['stride'], scale=args['scale'], visualize=args['visualize'])
+predict_bbox = []
+for window_size in windowSize:
+  slider.update_window_size(window_size)
+  predict_bbox += slider.predict(image, threshold=args['thresh'])
 predict_bbox = non_maximum_supperssion(predict_bbox, iou_threshold=args['iou'])
 visualize_bbox(image, predict_bbox)
