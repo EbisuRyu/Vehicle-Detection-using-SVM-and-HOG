@@ -29,7 +29,7 @@ def load_vehicle_dataset():
     print(f'Loaded dataset in {t_end - t_start:.2f} seconds')
     print("Vehicle images shape: ", vehicle_images.shape)
     print("Non-vehicle images shape: ", non_vehicle_images.shape)
-    X = np.vstack((vehicle_images, non_vehicle_images)).astype(np.float64)
+    X = np.vstack((vehicle_images, non_vehicle_images))
     y = np.array(label_list)
     return X, y
 

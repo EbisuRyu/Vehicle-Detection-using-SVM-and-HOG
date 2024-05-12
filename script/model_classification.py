@@ -1,24 +1,24 @@
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn .metrics import accuracy_score
+from sklearn.metrics import accuracy_score
 from sklearn.svm import SVC, LinearSVC
+from script.helpers import sigmoid
 import joblib
 import numpy as np
-
 from skimage import feature
 from skimage.transform import resize
 import cv2
 
 class SVMObjectClassifier():
     
-    def __init__(self, kernel='rbf', C=0.5, random_state=42, probability=True):
-        self.model = SVC(kernel=kernel, C=C, random_state=random_state, probability=probability)
+    def __init__(self, dual = 'auto', C = 0.5, max_iter = 10000):
+        self.model = LinearSVC(dual = dual, C = C, max_iter = max_iter)
         self.scaler = StandardScaler()
         self.label_encoder = LabelEncoder()
         self.feature_extracter = None
     
-    def get_feature_extracter(self, feature_extracter):
+    def set_feature_extracter(self, feature_extracter):
         self.feature_extracter = feature_extracter
     
     def prepare_dataset(self, X, y):
@@ -62,12 +62,12 @@ class SVMObjectClassifier():
     def predict(self, X):
         X_features = []
         for x in X:
-            x = cv2.resize(x, (64, 64))
             hog_features = self.feature_extracter.features(x)
             X_features.append(hog_features)
         X_features = np.array(X_features)
         X_id = np.arange(0, len(X_features))
         X_features = self.scaler.transform(X_features)
-        y_pred_prob = self.model.predict_proba(X_features)
-        y_pred = np.argmax(y_pred_prob, axis=1)
-        return y_pred_prob[X_id, y_pred], self.label_encoder.inverse_transform(y_pred)
+        y_pred = self.model.predict(X_features)
+        confidence_score = self.model.decision_function(X_features)
+        pred_prob = sigmoid(confidence_score)
+        return pred_prob, self.label_encoder.inverse_transform(y_pred)

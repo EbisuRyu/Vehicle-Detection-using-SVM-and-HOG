@@ -1,5 +1,6 @@
 import cv2
 import matplotlib.pyplot as plt
+import numpy as np
 
 def convert(frame, src_model = "rgb", dest_model = "hls"):
     
@@ -24,6 +25,9 @@ def convert(frame, src_model = "rgb", dest_model = "hls"):
 
     return frame
 
+def sigmoid(z):
+    return 1 / (1 + np.exp(-z))
+
 def show_images(images, per_row = 3, per_col = 2, W = 10, H = 5, tdpi = 80):
       
   fig, ax = plt.subplots(per_col, per_row, figsize = (W, H), dpi = tdpi)
@@ -40,15 +44,13 @@ def show_images(images, per_row = 3, per_col = 2, W = 10, H = 5, tdpi = 80):
 
 def box_boundaries(box):
   x1, y1 = box[0], box[1]
-  x2, y2 = box[0] + box[2], box[1] + box[2]  
+  x2, y2 = box[2], box[3]  
   return x1, y1, x2, y2
 
-def put_boxes(frame, boxes, color = (255, 0, 0), thickness = 10):
+def put_boxes(image, bboxes):
     
-  out_img = frame.copy()
-
-  for box in boxes:
-    x1, y1, x2, y2 = box_boundaries(box)    
-    cv2.rectangle(out_img, (x1, y1), (x2, y2), color, thickness)
-    
-  return out_img
+  image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+  for bbox in bboxes:
+      x_min, y_min, x_max, y_max, class_name, conf_score = bbox
+      cv2.rectangle(image, (x_min, y_min), (x_max, y_max), (0, 255, 0), 2)
+  return image

@@ -6,7 +6,6 @@ from skimage.transform import resize
 
 class FeatureExtracter:
   def __init__(self, color_model, orientations, pixels_per_cell, cells_per_block, transform_sqrt, block_norm = 'L2'):
-    
     self.color_model = color_model    
     self.orientations = orientations
     self.pixels_per_cell = (pixels_per_cell, pixels_per_cell)
@@ -58,7 +57,6 @@ class FeatureExtracter:
   def features(self, image):
     # image = image.astype(np.float32)
     # Resize the image
-    # image = resize(image, output_shape = (32, 32), anti_aliasing = True)
     self.extract_hog(image)
     x_start, x_end, y_start, y_end = self.pix_to_hog(0, 0, image.shape[1], image.shape[0])
     
