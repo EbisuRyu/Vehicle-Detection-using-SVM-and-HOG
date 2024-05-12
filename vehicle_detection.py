@@ -17,12 +17,14 @@ ap.add_argument("-io", "--iou", type=float, default=0.2, help="iou threshold")
 args = vars(ap.parse_args())
 
 sourcer_params = {
-  'color_model': 'yuv',                # hls, hsv, yuv, ycrcb 
+  'color_model': 'yuv',                # hls, hsv, yuv, ycrcb,
+  'spatial_size': (64, 64),            # (16, 16), (32, 32), (64, 64)
   'orientations': 9,        # 6 - 12
   'pixels_per_cell': 8,               # 8, 16
   'cells_per_block': 2,                # 1, 2
   'transform_sqrt': True,
-  'block_norm': 'L2'
+  'block_norm': 'L2',
+  'hog_visualize': False
 }
 
 X, y = load_vehicle_dataset()
@@ -32,7 +34,7 @@ model = training_model(X, y, feature_extracter, './save_model', evaluate=False)
 image = cv2.imread(args["image"])
 windowSize = [(80, 80)]
 feature_window_size = (64, 64)
-slider = Slider(model, non_maximum_supperssion, feature_window_size, stride=args['stride'], scale=args['scale'], visualize=args['visualize'])
+slider = Slider(model, None, stride=args['stride'], scale=args['scale'], visualize=args['visualize'])
 predict_bbox = []
 for window_size in windowSize:
   slider.update_window_size(window_size)

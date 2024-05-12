@@ -5,11 +5,10 @@ from script.model_localization import pyramid, sliding_window, iou_bbox, non_max
 
 class Slider:
     
-    def __init__(self, classifier, window_size, feature_window_size, stride, scale, minSize=(30, 30), strip_position=None, visualize=False):
+    def __init__(self, classifier, window_size, stride, scale, minSize=(30, 30), strip_position=None, visualize=False):
         self.classifier = classifier
         self.stride = stride
         self.window_size = window_size
-        self.feature_window_size = feature_window_size
         self.scale = scale
         self.minSize = minSize
         self.strip_position = strip_position
@@ -44,7 +43,6 @@ class Slider:
                     continue
                 x_min, y_min, x_max, y_max = x, y, x + winW, y + winH
                 bboxs.append([x_min, y_min, x_max, y_max, scale])
-                window = cv2.resize(window, self.feature_window_size)
                 window_images.append(window)
                 if self.visualize:
                     clone = resized.copy()

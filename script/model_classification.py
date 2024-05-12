@@ -65,7 +65,6 @@ class SVMObjectClassifier():
             hog_features = self.feature_extracter.features(x)
             X_features.append(hog_features)
         X_features = np.array(X_features)
-        X_id = np.arange(0, len(X_features))
         X_features = self.scaler.transform(X_features)
         y_pred = self.model.predict(X_features)
         confidence_score = self.model.decision_function(X_features)

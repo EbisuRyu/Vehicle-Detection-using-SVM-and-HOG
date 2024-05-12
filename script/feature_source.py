@@ -5,28 +5,41 @@ import cv2
 from skimage.transform import resize
 
 class FeatureExtracter:
-  def __init__(self, color_model, orientations, pixels_per_cell, cells_per_block, transform_sqrt, block_norm = 'L2'):
-    self.color_model = color_model    
+  def __init__(self, color_model, spatial_size, orientations, pixels_per_cell, cells_per_block, transform_sqrt, block_norm = 'L2', hog_visualize = False):
+    self.color_model = color_model
+    self.spatial_size = spatial_size 
     self.orientations = orientations
     self.pixels_per_cell = (pixels_per_cell, pixels_per_cell)
     self.cells_per_block = (cells_per_block, cells_per_block)
     self.transform_sqrt = transform_sqrt
     self.block_norm = block_norm
+    self.hog_visualize = hog_visualize
     self.ABC_img = None
     self.dims = (None, None, None)
     self.hogA, self.hogB, self.HogC = None, None, None
     self.hogA_img, self.hogB_img, self.hogC = None, None, None
 
   def hog(self, channel):
-    features, hog_img = hog(channel, 
-                            orientations = self.orientations, 
-                            pixels_per_cell = self.pixels_per_cell,
-                            cells_per_block = self.cells_per_block, 
-                            transform_sqrt = self.transform_sqrt, 
-                            visualize = True, 
-                            block_norm = self.block_norm,
-                            feature_vector = False)
-    return features, hog_img
+    if self.hog_visualize:
+      features, hog_img = hog(channel, 
+                              orientations = self.orientations, 
+                              pixels_per_cell = self.pixels_per_cell,
+                              cells_per_block = self.cells_per_block, 
+                              transform_sqrt = self.transform_sqrt, 
+                              visualize = True, 
+                              block_norm = self.block_norm,
+                              feature_vector = False)
+      return features, hog_img
+    else:
+      features = hog(channel, 
+                      orientations = self.orientations, 
+                      pixels_per_cell = self.pixels_per_cell,
+                      cells_per_block = self.cells_per_block, 
+                      transform_sqrt = self.transform_sqrt, 
+                      visualize = False, 
+                      block_norm = self.block_norm,
+                      feature_vector = False)
+      return features, None
 
   def extract_hog(self, image):
     self.RGB_img = image 
@@ -57,6 +70,7 @@ class FeatureExtracter:
   def features(self, image):
     # image = image.astype(np.float32)
     # Resize the image
+    image = cv2.resize(image, self.spatial_size)
     self.extract_hog(image)
     x_start, x_end, y_start, y_end = self.pix_to_hog(0, 0, image.shape[1], image.shape[0])
     
