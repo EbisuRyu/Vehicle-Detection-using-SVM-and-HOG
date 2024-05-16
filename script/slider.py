@@ -56,11 +56,12 @@ class Slider:
         predict_bboxs = []
         bboxs, window_images = self.generate_bounding_boxes(image)
         probs, labels = self.classifier.predict(window_images)
-        scale_predict_bboxs = bboxs[np.where(labels == 'vehicle')]
-        vehicle_probs = probs[np.where(labels == 'vehicle')]
-        for (x_min, y_min, x_max, y_max, scale), probability in zip(scale_predict_bboxs, vehicle_probs):
+        '''scale_predict_bboxs = bboxs[np.where(labels == 'vehicle')]
+        vehicle_probs = probs[np.where(labels == 'vehicle')]'''
+        
+        for (x_min, y_min, x_max, y_max, scale), probability, label in zip(bboxs, probs, labels):
             if probability > threshold:
                 x_min, y_min = int(x_min * scale), int(y_min * scale)
                 x_max, y_max = int(x_max * scale), int(y_max * scale)
-                predict_bboxs.append([x_min, y_min, x_max, y_max, 'vehicle', probability])
+                predict_bboxs.append([x_min, y_min, x_max, y_max, label, probability])
         return predict_bboxs

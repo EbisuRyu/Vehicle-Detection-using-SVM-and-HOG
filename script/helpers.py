@@ -20,6 +20,10 @@ def convert(frame, src_model = "rgb", dest_model = "hls"):
       frame = cv2.cvtColor(frame, cv2.COLOR_YUV2RGB)
     elif src_model == "ycrcb" and dest_model == "ycrcb":
       frame = cv2.cvtColor(frame, cv2.COLOR_YCR_CB2RGB)
+    elif src_model == "rgb" and dest_model == "rgb": 
+      frame = frame
+    elif src_model == "rgb" and dest_model == "gray":
+      frame = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)      
     else: 
       raise Exception('ERROR:', 'src_model or dest_model not implemented')
 

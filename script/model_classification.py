@@ -12,8 +12,8 @@ import cv2
 
 class SVMObjectClassifier():
     
-    def __init__(self, dual = 'auto', C = 0.5, max_iter = 10000):
-        self.model = LinearSVC(dual = dual, C = C, max_iter = max_iter)
+    def __init__(self, C = 0.5, kernel = 'rbf', random_state = 42):
+        self.model = SVC(kernel = kernel, random_state=random_state, probability=True, C = C)
         self.scaler = StandardScaler()
         self.label_encoder = LabelEncoder()
         self.feature_extracter = None
@@ -29,7 +29,7 @@ class SVMObjectClassifier():
         X_features = np.array(X_features)
         X_features = self.scaler.fit_transform(X_features)
         y_encoded = self.label_encoder.fit_transform(y)
-        print(X_features.shape, y_encoded.shape)
+        print(self.label_encoder.classes_)
         return X_features, y_encoded
     
     def train(self, X, y):
@@ -66,7 +66,9 @@ class SVMObjectClassifier():
             X_features.append(hog_features)
         X_features = np.array(X_features)
         X_features = self.scaler.transform(X_features)
-        y_pred = self.model.predict(X_features)
-        confidence_score = self.model.decision_function(X_features)
-        pred_prob = sigmoid(confidence_score)
-        return pred_prob, self.label_encoder.inverse_transform(y_pred)
+        idx = np.arange(len(X))
+        y_pred_prob = self.model.predict_proba(X_features)
+        y_pred = np.argmax(y_pred_prob, axis=1)
+        confidence_score = y_pred_prob[idx, y_pred]
+        #print(y_pred[0:10], confidence_score[0:10], self.label_encoder.inverse_transform(y_pred)[0:10])
+        return confidence_score, self.label_encoder.inverse_transform(y_pred)

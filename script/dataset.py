@@ -34,7 +34,7 @@ def load_vehicle_dataset():
     return X, y
 
 def load_traffic_signboard_dataset():
-    dataset_dir = './dataset'
+    dataset_dir = './dataset/traffic_sign_board'
     image_dir = os.path.join(dataset_dir, 'images')
     annotation_dir = os.path.join(dataset_dir, 'annotations')
     # Read the dataset
@@ -60,5 +60,6 @@ def load_traffic_signboard_dataset():
             
             image_list.append(img[ymin:ymax, xmin:xmax])
             label_list.append(label)
-            
+    print('Number of objects: ', len(image_list))
+    print('Classes: ', list(set(label_list)))
     return image_list, label_list

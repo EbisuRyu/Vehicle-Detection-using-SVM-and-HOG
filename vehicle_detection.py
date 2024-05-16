@@ -32,7 +32,7 @@ feature_extracter = FeatureExtracter(**sourcer_params)
 model = training_model(X, y, feature_extracter, './save_model', evaluate=False)
 
 image = cv2.imread(args["image"])
-windowSize = [(80, 80)]
+windowSize = [(80, 80), (50, 50)]
 feature_window_size = (64, 64)
 slider = Slider(model, None, stride=args['stride'], scale=args['scale'], visualize=args['visualize'])
 predict_bbox = []
