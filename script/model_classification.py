@@ -1,14 +1,9 @@
 from sklearn.preprocessing import LabelEncoder
-from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score
-from sklearn.svm import SVC, LinearSVC
-from script.helpers import sigmoid
+from sklearn.svm import SVC
 import joblib
 import numpy as np
-from skimage import feature
-from skimage.transform import resize
-import cv2
 
 class SVMObjectClassifier():
     
