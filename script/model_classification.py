@@ -24,7 +24,6 @@ class SVMObjectClassifier():
         X_features = np.array(X_features)
         X_features = self.scaler.fit_transform(X_features)
         y_encoded = self.label_encoder.fit_transform(y)
-        print(self.label_encoder.classes_)
         return X_features, y_encoded
     
     def train(self, X, y):
